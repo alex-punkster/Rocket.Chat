@@ -120,6 +120,7 @@ jobs:
       - name: Build Rocket.Chat
         # if: startsWith(github.ref, 'refs/pull/') != true
         run: |
+          npx browserslist@latest --update-db
           meteor build --server-only --directory /tmp/build-test
       - name: Prepare build
         run: |
