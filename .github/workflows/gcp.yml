@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       IMAGE_NAME: Rocket
-      PROJECT_ID: My_project
+      PROJECT_ID: prod-345015
     steps:
     - name: Checkout
       uses: actions/checkout@v2
