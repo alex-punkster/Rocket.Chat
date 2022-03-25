@@ -134,7 +134,7 @@ jobs:
       - name: Unpack build and prepare Docker files
         run: |
           cd /tmp/build-test
-          tar xzf Rocket.Chat.test.tar.gz
+          tar xfvz Rocket.Chat.test.tar.gz
           rm Rocket.Chat.test.tar.gz
           DOCKER_PATH="${GITHUB_WORKSPACE}/.docker"
           if [[ '${{ matrix.release }}' = 'preview' ]]; then
