@@ -9,7 +9,7 @@ jobs:
     name: Build and Push to GCP
     runs-on: ubuntu-latest
     env:
-      IMAGE_NAME: Rocket
+      IMAGE_NAME: rocket
       PROJECT_ID: prod-345015
     steps:
     - name: Checkout
