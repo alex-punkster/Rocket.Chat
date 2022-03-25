@@ -6,6 +6,9 @@ env:
   CI: true
   # MONGO_URL: mongodb://localhost:27017
   TOOL_NODE_FLAGS: --max_old_space_size=4096
+  DOCKER_FILE: "Dockerfile"
+  REPO_NAME: "ubuntu-apache"
+  DOCKER_USERNAME: "deman27"
 
 jobs:
   build:
@@ -154,27 +157,30 @@ jobs:
         #if: github.event_name == 'release'
         run: |
           cd /tmp/build-test
-          DOCKER_TAG=$GITHUB_REF_NAME
-          if [[ '${{ matrix.release }}' = 'preview' ]]; then
-            IMAGE_NAME="${IMAGE_NAME}.preview"
-          fi;
+          #DOCKER_TAG=$GITHUB_REF_NAME
+          #if [[ '${{ matrix.release }}' = 'preview' ]]; then
+            #IMAGE_NAME="${IMAGE_NAME}.preview"
+          #fi;
           # append the variant name to docker tag
-          if [[ '${{ matrix.release }}' = 'alpine' ]]; then
-            DOCKER_TAG="${DOCKER_TAG}-${{ matrix.release }}"
-          fi;
-          if echo "$GITHUB_REF_NAME" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$' ; then
-            RELEASE="latest"
-          elif echo "$GITHUB_REF_NAME" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+-rc\.[0-9]+$' ; then
-            RELEASE="release-candidate"
-          fi
-          if [[ '${{ matrix.release }}' = 'alpine' ]]; then
-            RELEASE="${RELEASE}-${{ matrix.release }}"
-          fi;
-          echo "IMAGE_NAME: $IMAGE_NAME"
-          echo "DOCKER_TAG: $DOCKER_TAG"
-          echo "RELEASE: $RELEASE"
+          #if [[ '${{ matrix.release }}' = 'alpine' ]]; then
+            #DOCKER_TAG="${DOCKER_TAG}-${{ matrix.release }}"
+          #fi;
+          #if echo "$GITHUB_REF_NAME" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$' ; then
+            #RELEASE="latest"
+          #elif echo "$GITHUB_REF_NAME" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+-rc\.[0-9]+$' ; then
+            #RELEASE="release-candidate"
+          #fi
+          #if [[ '${{ matrix.release }}' = 'alpine' ]]; then
+            #RELEASE="${RELEASE}-${{ matrix.release }}"
+          #fi;
+          #echo "IMAGE_NAME: $IMAGE_NAME"
+          #echo "DOCKER_TAG: $DOCKER_TAG"
+          #echo "RELEASE: $RELEASE"
+          
           # build and push the specific tag version
-          docker build -t $IMAGE_NAME:$DOCKER_TAG .
+          echo "IMAGE_TAG=${{ env.DOCKER_USERNAME }}/$REPO_NAME:$GITHUB_SHA" >> $GITHUB_ENV;
+          docker build --file ${DOCKER_FILE} --tag ${IMAGE_TAG}  .
+          #docker build -t $IMAGE_NAME:$DOCKER_TAG .
           docker tag $IMAGE_NAME:$DOCKER_TAG gcr.io/my-project
           docker push gcr.io/my-project
           
