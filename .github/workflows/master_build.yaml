@@ -134,7 +134,7 @@ jobs:
           
       - name: Unpack build and prepare Docker files
         run: |
-          cd /tmp/build/build-test
+          cd /tmp/build/build
           tar xzf Rocket.Chat.test.tar.gz
           rm Rocket.Chat.test.tar.gz
           DOCKER_PATH="${GITHUB_WORKSPACE}/.docker"
