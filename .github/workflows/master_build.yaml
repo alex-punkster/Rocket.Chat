@@ -1,9 +1,7 @@
 ---
 name: Build Rocket Chat and pack to Docker image master
 
-on:
-  push:
-    branches: [ master ] 
+on: [workflow_dispatch]
 
 env:
   CI: true
@@ -13,6 +11,9 @@ env:
 jobs:
   build:
     runs-on: ubuntu-20.04
+    env:
+      IMAGE_NAME: rocket
+      PROJECT_ID: prod-345015
 
     steps:
       - name: Github Info
@@ -152,6 +153,7 @@ jobs:
           if [ -e ${DOCKER_PATH}/entrypoint.sh ]; then
             cp ${DOCKER_PATH}/entrypoint.sh .
           fi;
+         
           
       - name: Build Docker image for tag
         if: github.event_name == 'release'
