@@ -5,7 +5,7 @@ on: [workflow_dispatch]
 env:
   CI: true
   # MONGO_URL: mongodb://localhost:27017
-  TOOL_NODE_FLAGS: --max_old_space_size=4096
+  TOOL_NODE_FLAGS: --max_old_space_size=10240
 
 jobs:
   build:
@@ -118,7 +118,7 @@ jobs:
       # - name: Build Rocket.Chat From Pull Request
       #   if: startsWith(github.ref, 'refs/pull/') == true
       #   env:
-      #     METEOR_PROFILE: 1000 METEOR_DISABLE_OPTIMISTIC_CACHING=1 TOOL_NODE_FLAGS=\"--max-old-space-size=4096\"
+      #     METEOR_PROFILE: 1000 METEOR_DISABLE_OPTIMISTIC_CACHING=1 TOOL_NODE_FLAGS=\"--max-old-space-size=10240\"
       #   run: |
       #     meteor build --server-only --directory --debug /tmp/build-test
 
