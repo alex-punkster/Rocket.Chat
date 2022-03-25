@@ -151,7 +151,7 @@ jobs:
           fi;
           
       - name: Build Docker image for tag
-        if: github.event_name == 'release'
+        #if: github.event_name == 'release'
         run: |
           cd /tmp/build-test
           DOCKER_TAG=$GITHUB_REF_NAME
