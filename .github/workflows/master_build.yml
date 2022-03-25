@@ -35,9 +35,11 @@ jobs:
           sudo apt clean
           docker rmi $(docker image ls -aq)
           df -h
+          
       - name: check package-lock
         run: |
           npx package-lock-check
+          
       # - name: Cache cypress
       #   id: cache-cypress
       #   uses: actions/cache@v2
@@ -83,6 +85,7 @@ jobs:
           fi
           # only install meteor if bin isn't found
           command -v meteor >/dev/null 2>&1 || curl https://install.meteor.com | sed s/--progress-bar/-sL/g | /bin/sh
+          
       - name: Versions
         run: |
           npm --versions
@@ -91,6 +94,7 @@ jobs:
           meteor npm --versions
           meteor node -v
           git version
+          
       - name: npm install
         # if: steps.cache-nodemodules.outputs.cache-hit != 'true' || steps.cache-cypress.outputs.cache-hit != 'true'
         run: |
@@ -114,7 +118,7 @@ jobs:
       # - name: Build Rocket.Chat From Pull Request
       #   if: startsWith(github.ref, 'refs/pull/') == true
       #   env:
-      #     METEOR_PROFILE: 1000
+      #     METEOR_PROFILE: 1000 METEOR_DISABLE_OPTIMISTIC_CACHING=1 TOOL_NODE_FLAGS=\"--max-old-space-size=4096\"
       #   run: |
       #     meteor build --server-only --directory --debug /tmp/build-test
 
