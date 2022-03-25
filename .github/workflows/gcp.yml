@@ -22,7 +22,7 @@ jobs:
         export_default_credentials: true
 
     - name: Build Docker Image
-      run: docker build -t $IMAGE_NAME:latest ./docker/Dockerfile
+      run: docker build -t $IMAGE_NAME:latest ./.docker/Dockerfile
 
     - name: Automatic Tagging of Releases
       id: increment-git-tag
