@@ -40,10 +40,7 @@ jobs:
       - name: Build Docker image for tag
         #if: github.event_name == 'release'
         run: |
-          sudo apt-get install apt-transport-https ca-certificates gnupg gpg
-          echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
-          curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
-          sudo apt-get update && sudo apt-get install google-cloud-cli
+          npm install --save @google-cloud/storage
           
           #Аuthentication with service account credentials
           gcloud auth activate-service-account ${{ secrets.GCR_ACCOUNT }} --key-file=${{ secrets.GCR_KEY }}
