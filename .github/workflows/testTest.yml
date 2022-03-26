@@ -36,78 +36,11 @@ jobs:
           docker rmi $(docker image ls -aq)
           df -h
           
-      - name: check package-lock
-        run: |
-          npx package-lock-check
-          
-      # - name: Cache cypress
-      #   id: cache-cypress
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: /home/runner/.cache/Cypress
-      #     key: ${{ runner.OS }}-cache-cypress-${{ hashFiles('**/package-lock.json', '.github/workflows/build_and_test.yml') }}
-
-      # - name: Cache node modules
-      #   id: cache-nodemodules
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: |
-      #       ./node_modules
-      #       ./ee/server/services/node_modules
-      #     key: ${{ runner.OS }}-node_modules-4-${{ hashFiles('**/package-lock.json', '.github/workflows/build_and_test.yml') }}
-
-      - name: Cache meteor local
-        uses: actions/cache@v2
-        with:
-          path: ./.meteor/local
-          key: ${{ runner.OS }}-meteor_cache-${{ hashFiles('.meteor/versions', '.github/workflows/build_and_test.yml') }}
-
-      - name: Cache meteor
-        uses: actions/cache@v2
-        with:
-          path: ~/.meteor
-          key: ${{ runner.OS }}-meteor-${{ hashFiles('.meteor/release', '.github/workflows/build_and_test.yml') }}
-
-      - name: Install Meteor
-        run: |
-          # Restore bin from cache
-          set +e
-          METEOR_SYMLINK_TARGET=$(readlink ~/.meteor/meteor)
-          METEOR_TOOL_DIRECTORY=$(dirname "$METEOR_SYMLINK_TARGET")
-          set -e
-          LAUNCHER=$HOME/.meteor/$METEOR_TOOL_DIRECTORY/scripts/admin/launch-meteor
-          if [ -e $LAUNCHER ]
-          then
-            echo "Cached Meteor bin found, restoring it"
-            sudo cp "$LAUNCHER" "/usr/local/bin/meteor"
-          else
-            echo "No cached Meteor bin found."
-          fi
-          # only install meteor if bin isn't found
-          command -v meteor >/dev/null 2>&1 || curl https://install.meteor.com | sed s/--progress-bar/-sL/g | /bin/sh
-          
-      - name: Versions
-        run: |
-          npm --versions
-          node -v
-          meteor --version
-          meteor npm --versions
-          meteor node -v
-          git version
-          
-      - name: npm install
-        # if: steps.cache-nodemodules.outputs.cache-hit != 'true' || steps.cache-cypress.outputs.cache-hit != 'true'
-        run: |
-          meteor npm install
-          cd ./ee/server/services
-          npm install
-          cd -
-      - run: meteor npm run lint
-          
+      
       - name: Build Docker image for tag
         #if: github.event_name == 'release'
         run: |
-          sudo apt-get install apt-transport-https ca-certificates gnupg
+          sudo apt-get install apt-transport-https ca-certificates gnupg gpg
           echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
           curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
           sudo apt-get update && sudo apt-get install google-cloud-cli
