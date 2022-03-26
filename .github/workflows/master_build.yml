@@ -147,7 +147,7 @@ jobs:
         run: |
           cd /tmp/build-test
           IMAGE_NAME="rocket.chat"
-          DOCKER_TAG=$GITHUB_REF_NAME/$GITHUB_SHA
+          DOCKER_TAG=$GITHUB_SHA
           
           # append the variant name to docker tag
                               
