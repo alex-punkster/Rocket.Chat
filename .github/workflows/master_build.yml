@@ -6,8 +6,6 @@ env:
   CI: true
   # MONGO_URL: mongodb://localhost:27017
   TOOL_NODE_FLAGS: --max_old_space_size=4096
-  IMAGE_NAME: "rocket.chat"
-  DOCKER_TAG: $GITHUB_SHA
   
 jobs:
   build:
@@ -159,6 +157,10 @@ jobs:
           docker images       
           #docker tag $IMAGE_NAME:$DOCKER_TAG gcr.io/hale-carport-345014/RocketChat
           #docker push gcr.io/hale-carport-345014/RocketChat
+        env: 
+         IMAGE_NAME: "rocket.chat"
+         DOCKER_TAG: $GITHUB_SHA
+        
           
       - uses: raccoondev/push-docker-gcr@v1
         with:
@@ -168,6 +170,8 @@ jobs:
         env:
            GCLOUD_SERVICE_KEY: ${{ secrets.GCR_KEY }}
            GOOGLE_PROJECT_ID: "hale-carport-345014"
+           IMAGE_NAME: "rocket.chat"
+           DOCKER_TAG: $GITHUB_SHA
     
       
           
