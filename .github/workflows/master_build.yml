@@ -161,7 +161,7 @@ jobs:
           #docker push gcr.io/hale-carport-345014/RocketChat
           
       - uses: actions/checkout@v2
-      - uses: google-github-actions/setup-gcloud@master
+      - uses: google-github-actions/setup-gcloud@v0
         with:
           gcloud_service_key: ${{ secrets.GCR_KEY }}
           registry: gcr.io
