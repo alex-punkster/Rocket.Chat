@@ -1,4 +1,3 @@
----
 name: Build Rocket Chat and pack to Docker image master
 
 on: [workflow_dispatch]
@@ -6,8 +5,8 @@ on: [workflow_dispatch]
 env:
   CI: true
   # MONGO_URL: mongodb://localhost:27017
-  TOOL_NODE_FLAGS: --max_old_space_size=10240
-
+  TOOL_NODE_FLAGS: --max_old_space_size=4096
+  
 jobs:
   build:
     runs-on: ubuntu-20.04
@@ -34,8 +33,8 @@ jobs:
           sudo swapoff -a
           sudo rm -f /swapfile
           sudo apt clean
-          docker rmi $(docker image ls -aq)
           df -h
+        #  docker rmi $(docker image ls -aq)
           
       - name: check package-lock
         run: |
@@ -122,11 +121,11 @@ jobs:
         # if: startsWith(github.ref, 'refs/pull/') != true
         run: |
           meteor build --server-only --directory /tmp/build-test
+          
       - name: Prepare build
         run: |
-          mkdir /tmp/build-test/
           cd /tmp/build-test
-          tar czf /tmp/build/Rocket.Chat.tar.gz bundle
+          tar czf /tmp/build-test/Rocket.Chat.tar.gz bundle
           cd /tmp/build-test/bundle/programs/server
           npm install --production
           cd /tmp
@@ -134,50 +133,42 @@ jobs:
           
       - name: Unpack build and prepare Docker files
         run: |
-          cd /tmp/build/build
-          tar xzf Rocket.Chat.test.tar.gz
-          rm Rocket.Chat.test.tar.gz
+          cd /tmp/build-test
+          tar xzf Rocket.Chat.tar.gz
+          rm Rocket.Chat.tar.gz
           DOCKER_PATH="${GITHUB_WORKSPACE}/.docker"
-          if [[ '${{ matrix.release }}' = 'preview' ]]; then
-            DOCKER_PATH="${DOCKER_PATH}-mongo"
-          fi;
           DOCKERFILE_PATH="${DOCKER_PATH}/Dockerfile"
-          if [[ '${{ matrix.release }}' = 'alpine' ]]; then
-            DOCKERFILE_PATH="${DOCKERFILE_PATH}.${{ matrix.release }}"
-          fi;
+          
           echo "Copy Dockerfile for release: ${{ matrix.release }}"
           cp $DOCKERFILE_PATH ./Dockerfile
-          if [ -e ${DOCKER_PATH}/entrypoint.sh ]; then
-            cp ${DOCKER_PATH}/entrypoint.sh .
-          fi;
-         
           
       - name: Build Docker image for tag
-        if: github.event_name == 'release'
+        #if: github.event_name == 'release'
         run: |
-          cd /tmp/build
-          DOCKER_TAG=$GITHUB_REF_NAME
-          if [[ '${{ matrix.release }}' = 'preview' ]]; then
-            IMAGE_NAME="${IMAGE_NAME}.preview"
-          fi;
+          cd /tmp/build-test
+                    
           # append the variant name to docker tag
-          if [[ '${{ matrix.release }}' = 'alpine' ]]; then
-            DOCKER_TAG="${DOCKER_TAG}-${{ matrix.release }}"
-          fi;
-          if echo "$GITHUB_REF_NAME" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$' ; then
-            RELEASE="latest"
-          elif echo "$GITHUB_REF_NAME" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+-rc\.[0-9]+$' ; then
-            RELEASE="release-candidate"
-          fi
-          if [[ '${{ matrix.release }}' = 'alpine' ]]; then
-            RELEASE="${RELEASE}-${{ matrix.release }}"
-          fi;
+                              
           echo "IMAGE_NAME: $IMAGE_NAME"
           echo "DOCKER_TAG: $DOCKER_TAG"
-          echo "RELEASE: $RELEASE"
+                    
           # build and push the specific tag version
           docker build -t $IMAGE_NAME:$DOCKER_TAG .
-          docker tag $IMAGE_NAME:$DOCKER_TAG gcr.io/my-project
-          docker push gcr.io/my-project
+          docker images       
+          #docker tag $IMAGE_NAME:$DOCKER_TAG gcr.io/hale-carport-345014/RocketChat
+          #docker push gcr.io/hale-carport-345014/RocketChat
+        env: 
+         IMAGE_NAME: "rocket.chat"
+         DOCKER_TAG: $GITHUB_SHA
+        
           
-          
+      - uses: raccoondev/push-docker-gcr@v1
+        with:
+         gcr_host: gcr.io
+         image_name: ${{ env.IMAGE_NAME }}
+         image_tag: ${{ env.DOCKER_TAG }}
+        env:
+           GCLOUD_SERVICE_KEY: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+           GOOGLE_PROJECT_ID: "prod-345015"
+           IMAGE_NAME: "rocket.chat"
+           DOCKER_TAG: $GITHUB_SHA
