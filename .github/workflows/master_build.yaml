@@ -73,7 +73,7 @@ jobs:
               echo "IMAGE_NAME=rocket-chat" >> $GITHUB_ENV;
               echo "IMAGE_TAG=$GITHUB_SHA" >> $GITHUB_ENV;
               echo "GCR_REGION=gcr.io" >> $GITHUB_ENV;
-              echo "GOOGLE_PROJECT_ID=hale-carport-345014" >> $GITHUB_ENV; 
+              echo "GOOGLE_PROJECT_ID=prod-345015" >> $GITHUB_ENV; 
       - name: Build Rocket Chat tagged docker image
         run: |
           echo "IMAGE_NAME: $IMAGE_NAME"
