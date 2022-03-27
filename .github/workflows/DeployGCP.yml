@@ -25,5 +25,5 @@ jobs:
     # ... further steps are automatically authenticated
     - name: Go to GoogleCLI
       run: |
-        gcloud container clusters get-credentials rocket
+        gcloud container clusters get-credentials rocket --zone=us-central1-a
         helm install rocketchat rocketchat/rocketchat --set container.image=gcr.io/hale-carport-345014/rocket-chat@sha256:824037db6a3aa06a1f74d6d001ad0b512bad7707e87c12499c00f0a672eb2089,mongodb.auth.password=$(echo -n $(openssl rand -base64 32)),mongodb.auth.rootPassword=$(echo -n $(openssl rand -base64 32))
