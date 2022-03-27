@@ -1,0 +1,30 @@
+name: Deployment on GCP
+
+on: [workflow_dispatch]
+
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    # ...
+
+    # Add "id-token" with the intended permissions.
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+    - uses: 'actions/checkout@v3'
+
+    - id: 'auth'
+      name: 'Authenticate to Google Cloud'
+      uses: 'google-github-actions/auth@v0'
+      with:
+        credentials_json: '${{ secrets.GCR_KEY }}'
+
+    # ... further steps are automatically authenticated
+    - name: Go to GoogleCLI
+      run: |
+        gcloud container clusters get-credentials rocket
+        helm install rocketchat rocketchat/rocketchat --set container.image=gcr.io/hale-carport-345014/rocket-chat@sha256:824037db6a3aa06a1f74d6d001ad0b512bad7707e87c12499c00f0a672eb2089,mongodb.auth.password=$(echo -n $(openssl rand -base64 32)),mongodb.auth.rootPassword=$(echo -n $(openssl rand -base64 32))
+
