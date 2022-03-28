@@ -92,4 +92,4 @@ jobs:
          image_name: "${{ env.IMAGE_NAME}}"
          image_tag: "${{ env.IMAGE_TAG }}"
         env:
-           service_account_key: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+           GCLOUD_SERVICE_KEY: ${{ secrets.GCR_KEY }}
