@@ -27,5 +27,5 @@ jobs:
       run: |
         gcloud container clusters get-credentials rocket --zone=us-central1-a
         helm repo add rocketchat-server https://rocketchat.github.io/helm-charts
-        helm upgrade myrocket rocketchat-server/rocketchat --version 4.5.4 --install --set container.image=gcr.io/hale-carport-345014/rocket-chat@sha256:7d0cccbc4731a1e48bff499fccd0d9d4091633766e7a40f5f593e3fa4d0db5b7,mongodb.auth.password=user,mongodb.auth.rootPassword=root-user,service.type=LoadBalancer
+        helm upgrade myrocket rocketchat-server/rocketchat --version 4.5.4 --install --set container.image=gcr.io/hale-carport-345014/rocket-chat@sha256:7d0cccbc4731a1e48bff499fccd0d9d4091633766e7a40f5f593e3fa4d0db5b7,mongodb.auth.password='${{ secrets.MONGO_PASS }}',mongodb.auth.rootPassword='${{ secrets.MONGO_RPASS }}',service.type=LoadBalancer
         
