@@ -3,6 +3,8 @@
 - gcloud container clusters create rocket --num-nodes=3 --disk-size=15 --machine-type=e2-medium
 - gcloud container clusters get-credentials rocket
 - gcloud container clusters delete rocket
+
+
 ================================================
 
 
