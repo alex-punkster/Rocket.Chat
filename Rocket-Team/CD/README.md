@@ -4,3 +4,4 @@ gcloud container clusters get-credentials rocket
 gcloud container clusters delete rocket --num-nodes=2
 
 helm repo add rocketchat-server https://rocketchat.github.io/helm-charts
+kubectl port-forward rocketchat-1648421186-rocketchat-798fdbd6c5-jrg6x 7777:80
