@@ -1,50 +1,31 @@
----
-name: Build and Push Image to Google Cloud Platform
-on:
-  push:
-    branches: [ master ]  
+name: Deployment on GCP
 
-jobs:  
-  build-push-gcr:
-    name: Build and Push to GCP
-    runs-on: ubuntu-latest
-    env:
-      IMAGE_NAME: rocket
-      PROJECT_ID: prod-345015
+on: [workflow_dispatch]
+
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    # ...
+
+    # Add "id-token" with the intended permissions.
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+    - uses: 'actions/checkout@v3'
 
-    - uses: google-github-actions/setup-gcloud@v0
+    - id: 'auth'
+      name: 'Authenticate to Google Cloud'
+      uses: 'google-github-actions/auth@v0'
       with:
-        service_account_key: ${{ secrets.SERVICE_ACCOUNT_KEY }}
-        project_id: ${{ env.PROJECT_ID }}
-        export_default_credentials: true
+        credentials_json: '${{ secrets.GCR_KEY }}'
 
-    - name: Build Docker Image
-      run: docker build -t $IMAGE_NAME:latest . --file .docker/Dockerfile  
-
-    - name: Automatic Tagging of Releases
-      id: increment-git-tag
+    # ... further steps are automatically authenticated
+    - name: Go to GoogleCLI
       run: |
-        bash ./scripts/git_update.sh -v major
-    - name: Configure Docker Client
-      run: |-
-        gcloud auth configure-docker --quiet
-        gcloud auth configure-docker us-west2-docker.pkg.dev --quiet
-    - name: Push Docker Image to Container Registry (GCR)
-      env:
-        GIT_TAG: ${{ steps.increment-git-tag.outputs.git-tag }}
-      run: |-
-        docker tag $IMAGE_NAME:latest gcr.io/$PROJECT_ID/$IMAGE_NAME:latest
-        docker tag $IMAGE_NAME:latest gcr.io/$PROJECT_ID/$IMAGE_NAME:$GIT_TAG
-        docker push gcr.io/$PROJECT_ID/$IMAGE_NAME:latest
-        docker push gcr.io/$PROJECT_ID/$IMAGE_NAME:$GIT_TAG
-    - name: Push Docker Image to Artifact Registry
-      env:
-        GIT_TAG: ${{ steps.increment-git-tag.outputs.git-tag }}
-      run: |-
-        docker tag $IMAGE_NAME:latest us-central1-docker.pkg.dev/$PROJECT_ID/images/$IMAGE_NAME:latest
-        docker tag $IMAGE_NAME:latest us-central1-docker.pkg.dev/$PROJECT_ID/images/$IMAGE_NAME:$GIT_TAG
-        docker push us-central1-docker.pkg.dev/$PROJECT_ID/images/$IMAGE_NAME:latest
-        docker push us-central1-docker.pkg.dev/$PROJECT_ID/images/$IMAGE_NAME:$GIT_TAG 
+        gcloud container clusters get-credentials rocket --zone=us-central1-a
+        helm repo add rocketchat-server https://rocketchat.github.io/helm-charts
+        helm upgrade myrocket rocketchat-server/rocketchat --version 4.5.4 --install --set container.image=gcr.io/prod-345015/rocket-chat@sha256:dbdbcae432136ab4a304d2bed40a4f889cef90f524e9e17e8aeec51bef5c3179,mongodb.auth.password='${{ secrets.MONGO_PASS }}',mongodb.auth.rootPassword='${{ secrets.MONGO_RPASS }}',service.type=LoadBalancer
+        
