@@ -25,7 +25,7 @@ jobs:
     # ... further steps are automatically authenticated
     - name: Go to GoogleCLI
       run: |
-        gcloud container clusters get-credentials rocket --zone=us-central1-a
+        gcloud container clusters get-credentials rocket --zone=us-central1
         helm repo add rocketchat-server https://rocketchat.github.io/helm-charts
         helm upgrade myrocket rocketchat-server/rocketchat --version 4.5.4 --install --set container.image=gcr.io/prod-345015/rocket-chat@sha256:dbdbcae432136ab4a304d2bed40a4f889cef90f524e9e17e8aeec51bef5c3179,mongodb.auth.password='${{ secrets.MONGO_PASS }}',mongodb.auth.rootPassword='${{ secrets.MONGO_RPASS }}',service.type=LoadBalancer
         
