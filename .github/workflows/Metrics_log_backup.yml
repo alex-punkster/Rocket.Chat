@@ -25,7 +25,7 @@ jobs:
     # ... further steps are automatically authenticated
     - name: Deployment to GCP
       run: |
-        gcloud container clusters get-credentials rocket
+        gcloud container clusters get-credentials rocket --zone=us-central1-a
         helm repo add bitnami https://charts.bitnami.com/bitnami
         helm install --create-namespace -n metrics prometheus bitnami/kube-prometheus
         helm install -n metrics grafana bitnami/grafana --set admin.password=admin
