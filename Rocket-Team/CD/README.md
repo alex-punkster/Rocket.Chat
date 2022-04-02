@@ -18,7 +18,7 @@ kubectl -n rocketchat create -f rocket-chat.yaml
 
 echo "bW9uZ29kYjovL3JvY2tldGNoYXQ6dGVzdFBBU1NAbXlyb2NrZXQtbW9uZ29kYi1oZWFkbGVzczoyNzAxNy9yb2NrZXRjaGF0P3JlcGxpY2FTZXQ9cnMw" | base64 --decode
 
-
-helm install -n rocketteam myrocket rocketteamChat/
+kubectl -n dimon apply -f ./manifests/rocketchat/ -f ./manifests/mongodb/
+kubectl -n dimon delete -f ./manifests/rocketchat/ -f ./manifests/mongodb/
 
 
