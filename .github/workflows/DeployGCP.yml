@@ -26,8 +26,7 @@ jobs:
     - name: Go to GoogleCLI
       run: |
         gcloud container clusters get-credentials rocket --zone=us-central1-a
-        ls -la
-    # helm repo add rocketchat-server https://rocketchat.github.io/helm-charts
-    # helm upgrade myrocket rocketchat-server/rocketchat --version 4.5.4 --install --set container.image=gcr.io/hale-carport-345014/rocket-chat@sha256:4882088613f6f0d77325e09b7027ecabbb37fbb1108d9803d0a50b4029bdddb6,mongodb.auth.password='${{ secrets.MONGO_PASS }}',mongodb.auth.rootPassword='${{ secrets.MONGO_RPASS }}',service.type=LoadBalancer
+        kubectl create namespace rocketteam
+        kubectl -n rocketteam apply -f ./Rocket-Team/CD/manifests/rocketchat/ -f ./Rocket-Team/CD/manifests/mongodb/
         
         
