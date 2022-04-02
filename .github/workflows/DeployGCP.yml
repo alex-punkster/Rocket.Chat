@@ -26,7 +26,6 @@ jobs:
     - name: Go to GoogleCLI
       run: |
         gcloud container clusters get-credentials rocket --zone=us-central1-a
-        kubectl create namespace rocketteam
         kubectl -n rocketteam apply -f ./Rocket-Team/CD/manifests/rocketchat/ -f ./Rocket-Team/CD/manifests/mongodb/
         
         
