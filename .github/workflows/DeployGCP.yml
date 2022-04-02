@@ -1,4 +1,4 @@
-name: Deployment on GCP
+name: Deployment to GCP
 
 on: [workflow_dispatch]
 
@@ -23,7 +23,7 @@ jobs:
         credentials_json: '${{ secrets.GCR_KEY }}'
 
     # ... further steps are automatically authenticated
-    - name: Go to GoogleCLI
+    - name: Deployment to GCP
       run: |
         gcloud container clusters get-credentials rocket --zone=us-central1-a
         kubectl -n rocketteam apply -f ./Rocket-Team/CD/manifests/rocketchat/ -f ./Rocket-Team/CD/manifests/mongodb/
