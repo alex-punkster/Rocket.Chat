@@ -27,5 +27,7 @@ jobs:
       run: |
         gcloud container clusters get-credentials rocket --zone=us-central1-a
         helm repo add bitnami https://charts.bitnami.com/bitnami
-        helm upgrade --create-namespace -i -n metrics prometheus bitnami/kube-prometheus
-        helm upgrade -i -n metrics grafana bitnami/grafana --set admin.password=admin
+        helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+        helm upgrade -i kube-prometheus-stack -n metrics --set grafana.adminPassword=admin prometheus-community/kube-prometheus-stack --version 34.7.1
+    #    helm upgrade --create-namespace -i -n metrics prometheus bitnami/kube-prometheus
+    #    helm upgrade -i -n metrics grafana bitnami/grafana --set admin.password=admin
