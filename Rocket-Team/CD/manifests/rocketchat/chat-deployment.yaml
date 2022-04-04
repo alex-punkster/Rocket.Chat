@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myrocket-rocketchat
+  labels:
+    app.kubernetes.io/name: rocketchat
+    app.kubernetes.io/instance: myrocket
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: rocketchat
+      app.kubernetes.io/instance: myrocket
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: rocketchat
+        app.kubernetes.io/instance: myrocket
+
+      annotations:
+        checksum/secret: 7f942de3bdd45ae8b002c73c8277022d7bf7f2833d186c6d2cf088214e3d1b5b
+
+
+    spec:
+      securityContext:
+        fsGroup: 999
+        runAsUser: 999
+      containers:
+      - name: rocketchat
+        image: gcr.io/hale-carport-345014/rocket-chat
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: INSTANCE_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: MONGO_URL
+          valueFrom:
+            secretKeyRef:
+              name: myrocket-rocketchat
+              key: mongo-uri
+        - name: MONGO_OPLOG_URL
+          valueFrom:
+            secretKeyRef:
+              name: myrocket-rocketchat
+              key: mongo-oplog-uri
+        ports:
+        - name: http
+          containerPort: 3000
+        livenessProbe:
+          httpGet:
+            path: /api/info
+            port: http
+          initialDelaySeconds: 60
+          periodSeconds: 15
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /api/info
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 15
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+        resources:
+          null
+        volumeMounts:
+        - name: rocket-data
+          mountPath: /app/uploads
+        - name: tmp
+          mountPath: /tmp
+      volumes:
+      - name: tmp
+        emptyDir: {}
+      - name: rocket-data
+        persistentVolumeClaim:
+          claimName: myrocket-rocketchat
