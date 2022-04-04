@@ -1,4 +1,4 @@
-name: Metrics
+name: Deploy Prometheus and EFK
 
 on: [workflow_dispatch]
 
@@ -31,4 +31,5 @@ jobs:
         helm repo add fluent https://fluent.github.io/helm-charts
         helm upgrade kube-prometheus-stack prometheus-community/kube-prometheus-stack --create-namespace -i -n metrics --set grafana.adminPassword=admin --version 34.7.1
         helm upgrade --create-namespace -i -n logging elastic bitnami/elasticsearch --set global.kibanaEnabled=true --set data.replicas=1
-        
+        helm upgrade -i -n logging fluent-bit fluent/fluent-bit -f ./Rocket-Team/CD/values.yaml
+    
