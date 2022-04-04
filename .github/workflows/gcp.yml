@@ -1,10 +1,10 @@
-name: Deployment on GCP
+name: Deployment to GCP
 
 on: [workflow_dispatch]
 
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-20.04
     # ...
 
@@ -23,9 +23,7 @@ jobs:
         credentials_json: '${{ secrets.GCR_KEY }}'
 
     # ... further steps are automatically authenticated
-    - name: Go to GoogleCLI
+    - name: Deployment to GCP
       run: |
         gcloud container clusters get-credentials rocket --zone=us-central1-a
-        helm repo add rocketchat-server https://rocketchat.github.io/helm-charts
-        helm upgrade myrocket rocketchat-server/rocketchat --version 4.5.4 --install --set container.image=gcr.io/prod-345015/rocket-chat@sha256:dbdbcae432136ab4a304d2bed40a4f889cef90f524e9e17e8aeec51bef5c3179,mongodb.auth.password='${{ secrets.MONGO_PASS }}',mongodb.auth.rootPassword='${{ secrets.MONGO_RPASS }}',service.type=LoadBalancer --namespace=rocket
-        
+        kubectl -n rocketteam apply -f ./Rocket-Team/CD/manifests/rocketchat/ -f ./Rocket-Team/CD/manifests/mongodb/
