@@ -26,7 +26,6 @@ jobs:
     - name: Deployment to GCP
       run: |
         gcloud container clusters get-credentials rocket --zone=us-central1-a
-        kubectl create namespace efk
-        kubectl -n efk create -f ./Rocket-Team/CD/manifests/elasticsearch/es-svc.yaml -f ./Rocket-Team/CD/manifests/elasticsearch/es-sts.yaml
-        kubectl -n efk create -f ./Rocket-Team/CD/manifests/kibana/kibana-deployment.yaml -f ./Rocket-Team/CD/manifests/kibana/kibana-svc.yaml
-        kubectl -n efk create -f ./Rocket-Team/CD/manifests/fluentd/fluentd-role.yaml -f ./Rocket-Team/CD/manifests/fluentd/fluentd-sa.yaml -f ./Rocket-Team/CD/manifests/fluentd/fluentd-rb.yaml -f ./Rocket-Team/CD/manifests/fluentd/fluentd-ds.yaml
+        kubectl -n efk apply -f ./Rocket-Team/CD/manifests/elasticsearch/es-svc.yaml -f ./Rocket-Team/CD/manifests/elasticsearch/es-sts.yaml
+        kubectl -n efk apply -f ./Rocket-Team/CD/manifests/kibana/kibana-deployment.yaml -f ./Rocket-Team/CD/manifests/kibana/kibana-svc.yaml
+        kubectl -n efk apply -f ./Rocket-Team/CD/manifests/fluentd/fluentd-role.yaml -f ./Rocket-Team/CD/manifests/fluentd/fluentd-sa.yaml -f ./Rocket-Team/CD/manifests/fluentd/fluentd-rb.yaml -f ./Rocket-Team/CD/manifests/fluentd/fluentd-ds.yaml
