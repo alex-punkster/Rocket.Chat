@@ -1,10 +1,10 @@
-name: Deployment grafana
+name: Metrics
 
 on: [workflow_dispatch]
 
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-20.04
     # ...
 
@@ -23,8 +23,11 @@ jobs:
         credentials_json: '${{ secrets.GCR_KEY }}'
 
     # ... further steps are automatically authenticated
-    - name: Go to GoogleCLI
+    - name: Deployment to GCP
       run: |
         gcloud container clusters get-credentials rocket --zone=us-central1-a
-        helm repo add stable https://charts.helm.sh/stable
-        helm install stable prometheus-community/kube-prometheus-stack
+        helm repo add bitnami https://charts.bitnami.com/bitnami
+        helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+        helm upgrade kube-prometheus-stack prometheus-community/kube-prometheus-stack --create-namespace -i -n metrics --set grafana.adminPassword=admin --version 34.7.1
+    #    helm upgrade --create-namespace -i -n metrics prometheus bitnami/kube-prometheus
+    #    helm upgrade -i -n metrics grafana bitnami/grafana --set admin.password=admin
