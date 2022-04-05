@@ -10,3 +10,8 @@ Work with Google Cloud Platform:
 7. Enable required APIs `gcloud services enable container.googleapis.com`
 8. Finally create Kubernetes cluster for deploying the project
 `gcloud container clusters create rocket --num-nodes=5 --disk-size=15 --machine-type=e2-medium --enable-autoprovisioning --min-cpu 1 --min-memory 1 --max-cpu 10 --max-memory 20`
+9. Create Bucket an cloud storage for backups
+
+Work with Github actions:
+1. Create pipeline for deploying Rocket-chat application. After checkout and authentication in GCP runs deployment from manifests files of two Kubernetes pods: Mongo database and Chat application
+2. Create pipeline for deploying metrics and logging. 
