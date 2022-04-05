@@ -7,11 +7,12 @@ Work with Google Cloud Platform:
 4. Add Storage Admin role for service account 
 5. Install the Google Cloud CLI according to official guide https://cloud.google.com/sdk/docs/install-sdk
 6. Enable API for Cloud container registry `gcloud services enable containerregistry.googleapis.com`
-7. After pipeline completes, we get an image in GCR
-![Result](https://github.com/alex-punkster/Rocket.Chat/blob/master/Rocket-Team/img/container%20registry.png?raw=true)
 
 Work with Github actions:
 1. Create pipeline for building application and pushing it to Cloud container registry. The pipeline is /.github/workflows/Build_and_Push.yml
+2. After pipeline completes, we get an image in GCR
+![Result](https://github.com/alex-punkster/Rocket.Chat/blob/master/Rocket-Team/img/container%20registry.png?raw=true)
+
 
 ## Exadel final project CD part
 
@@ -22,6 +23,9 @@ Work with Google Cloud Platform:
 4. Finally create Kubernetes cluster for deploying the project
 `gcloud container clusters create rocket --num-nodes=5 --disk-size=15 --machine-type=e2-medium`
 5. Create Bucket an cloud storage for backups
+As a result we'll have working Kubernetes cluster with 5 nodes and the bucket for storage
+![Result](https://github.com/alex-punkster/Rocket.Chat/blob/master/Rocket-Team/img/cluster.png?raw=true)
+![Result](https://github.com/alex-punkster/Rocket.Chat/blob/master/Rocket-Team/img/bucket.png?raw=true)
 
 Work with Github actions:
 1. Create pipeline for deploying Rocket-chat application. After checkout and authentication in GCP runs deployment from manifests files of two Kubernetes pods: Mongo database and Chat application. The pipeline is /.github/workflows/gcp.yml
