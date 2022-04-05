@@ -8,6 +8,7 @@ Work with Google Cloud Platform:
 5. Install the Google Cloud CLI according to official guide https://cloud.google.com/sdk/docs/install-sdk
 6. Enable API for Cloud container registry `gcloud services enable containerregistry.googleapis.com`
 7. After pipeline completes, we get an image in GCR
+![Result](https://github.com/alex-punkster/Rocket.Chat/blob/master/Rocket-Team/img/container%20registry.png?raw=true)
 
 Work with Github actions:
 1. Create pipeline for building application and pushing it to Cloud container registry. The pipeline is /.github/workflows/Build_and_Push.yml
