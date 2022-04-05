@@ -9,3 +9,12 @@ Work with Google Cloud Platform:
 6. Connect the Google CLI on the localhost with GCP account, run `gcloud init`, then sign in to GCP account, choose project and region
 7. Enable required APIs `gcloud services enable container.googleapis.com`
 8. Finally create Kubernetes cluster for deploying the project
+`gcloud container clusters create rocket \
+ --num-nodes=5 \
+ --disk-size=15 \
+ --machine-type=e2-medium \
+ --enable-autoprovisioning \
+ --min-cpu 1 \
+ --min-memory 1 \
+ --max-cpu 10 \
+ --max-memory 20`
