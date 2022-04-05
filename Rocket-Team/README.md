@@ -13,5 +13,11 @@ Work with Google Cloud Platform:
 9. Create Bucket an cloud storage for backups
 
 Work with Github actions:
-1. Create pipeline for deploying Rocket-chat application. After checkout and authentication in GCP runs deployment from manifests files of two Kubernetes pods: Mongo database and Chat application
-2. Create pipeline for deploying metrics and logging. 
+1. Create pipeline for deploying Rocket-chat application. After checkout and authentication in GCP runs deployment from manifests files of two Kubernetes pods: Mongo database and Chat application. The pipeline is /.github/workflows/gcp.yml
+2. Create pipeline for deploying metrics and logging. It consists of Prometheus+Grafana stack for metrics and EFK stack for logging. Each stack deploys in its own namespace. At first, add helm repos for each app, then deploy these apps with helm-charts. The pipeline is /.github/workflows/Prometheus and EFK.yml
+Create pipeline for deploying Kasten app for backups. This application has been deployed with helm-chart too. The pipeline is /.github/workflows/kasten.yml
+
+Post-installation steps:
+1. Run Kasten app with port-forwarding `kubectl --namespace backup port-forward service/gateway 8080:8000`. The Kasten dashboard will be available at http://127.0.0.1:8080/k10/#/ 
+2. Add Bucket for storage backups
+3. Create backup policy for Rocket-chat application
