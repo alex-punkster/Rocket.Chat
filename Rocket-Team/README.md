@@ -42,3 +42,6 @@ Post-installation steps:
 4. Run Grafana via port-forwarding, browse some dashboards to monitor working cluster
 ![Result](https://github.com/alex-punkster/Rocket.Chat/blob/master/Rocket-Team/img/grafana_cluster.png?raw=true)
 ![Result](https://github.com/alex-punkster/Rocket.Chat/blob/master/Rocket-Team/img/grafana_workloads.png?raw=true)
+
+5. Run Kibana via port-forwarding, add index pattern `logstash-*` and get some logs from cluster namespaces
+6. ![Result](https://github.com/alex-punkster/Rocket.Chat/blob/master/Rocket-Team/img/elastic.png?raw=true)
