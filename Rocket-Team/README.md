@@ -36,5 +36,9 @@ Post-installation steps:
 1. Run Kasten app with port-forwarding `kubectl --namespace backup port-forward service/gateway 8080:8000`. The Kasten dashboard will be available at http://127.0.0.1:8080/k10/#/ 
 2. Add Bucket for storage backups
 3. Create backup policy for Rocket-chat application
-4.![Result](https://github.com/alex-punkster/Rocket.Chat/blob/master/Rocket-Team/img/kasten.png?raw=true)
-5.![Result](https://github.com/alex-punkster/Rocket.Chat/blob/master/Rocket-Team/img/run_policy.png?raw=true)
+![Result](https://github.com/alex-punkster/Rocket.Chat/blob/master/Rocket-Team/img/kasten.png?raw=true)
+![Result](https://github.com/alex-punkster/Rocket.Chat/blob/master/Rocket-Team/img/run_policy.png?raw=true)
+
+4. Run Grafana via port-forwarding, browse some dashboards to monitor working cluster
+![Result](https://github.com/alex-punkster/Rocket.Chat/blob/master/Rocket-Team/img/grafana_cluster.png?raw=true)
+![Result](https://github.com/alex-punkster/Rocket.Chat/blob/master/Rocket-Team/img/grafana_workloads.png?raw=true)
