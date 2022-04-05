@@ -1,0 +1,30 @@
+name: Kasten_backup
+
+on: [workflow_dispatch]
+
+
+jobs:
+  deploy:
+    runs-on: ubuntu-20.04
+    # ...
+
+    # Add "id-token" with the intended permissions.
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+    - uses: 'actions/checkout@v3'
+
+    - id: 'auth'
+      name: 'Authenticate to Google Cloud'
+      uses: 'google-github-actions/auth@v0'
+      with:
+        credentials_json: '${{ secrets.GCR_KEY }}'
+
+    # ... further steps are automatically authenticated
+    - name: Deployment to GCP
+      run: |
+        gcloud container clusters get-credentials rocket --zone=us-central1-a
+        helm repo add kasten https://charts.kasten.io/
+        helm upgrade --create-namespace -i -n backup k10 kasten/k10
