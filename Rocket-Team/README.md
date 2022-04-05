@@ -7,6 +7,7 @@ Work with Google Cloud Platform:
 4. Add Storage Admin role for service account 
 5. Install the Google Cloud CLI according to official guide https://cloud.google.com/sdk/docs/install-sdk
 6. Enable API for Cloud container registry `gcloud services enable containerregistry.googleapis.com`
+7. After pipeline completes, we get an image in GCR
 
 Work with Github actions:
 1. Create pipeline for building application and pushing it to Cloud container registry. The pipeline is /.github/workflows/Build_and_Push.yml
